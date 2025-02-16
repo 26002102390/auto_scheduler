@@ -168,6 +168,25 @@ for s in students:
                         objective_terms.append(
                             -15 * x[regular_teacher, s["name"], regular_subject, d, p]
                         )
+# 空きコマ回避
+gap_penalty = 10  # ギャップ1箇所あたりのペナルティ
+
+for t in teachers:
+    t_name = t["name"]
+    for d in days:
+        period_list = sorted(periods)  # 例: [1, 2, 3, 4, ...]
+        for i in range(1, len(period_list) - 1):  # 先頭・末尾以外を対象
+            prev = period_list[i-1]
+            curr = period_list[i]
+            nxt = period_list[i+1]
+            gap = model.NewBoolVar(f"gap_{t_name}_{d}_{curr}")
+            model.Add(gap <= has_class_vars[(t_name, d, prev)])
+            model.Add(gap <= has_class_vars[(t_name, d, nxt)])
+            model.Add(gap >= has_class_vars[(t_name, d, prev)] +
+                      has_class_vars[(t_name, d, nxt)] -
+                      has_class_vars[(t_name, d, curr)] - 1)
+            # gap_penalty を目的関数に加える
+            objective_terms.append(gap_penalty * gap)
 
 # # 4. 教師の連続コマと空きコマ制約（重み25）
 # #    元コードは "if model.Add(...):" などでブロック分けしていましたが、不可能なので以下のように修正
