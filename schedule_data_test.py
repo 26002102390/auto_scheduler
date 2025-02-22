@@ -21,7 +21,7 @@ teachers = [
     }
 ]
 
-# "preference"：continuous(連続コマを希望する),any(分散コマを希望する),normal(どんな形でも良い)
+# "preference"：continuousれれ(連続コマを希望する),any(分散コマを希望する),normal(どんな形でも良い)
 students = [
     {"name": "池田大輔", "school_level": "middle", "grade": 3, "preference": "continuous"},
     {"name": "宮本蓮", "school_level": "middle", "grade": 1, "preference": "normal"},
